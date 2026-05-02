@@ -54,6 +54,16 @@ final class StudyRepository
             )'
         );
 
+        $this->pdo->exec(
+            'CREATE TABLE IF NOT EXISTS login_testimonials (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                author_name VARCHAR(120) NOT NULL,
+                author_role VARCHAR(120) NOT NULL,
+                quote TEXT NOT NULL,
+                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )'
+        );
+
         $this->ensureColumn('qualitative_studies', 'tenant_id', 'INTEGER NOT NULL DEFAULT 1');
         $this->ensureColumn('qualitative_studies', 'user_id', 'INTEGER NOT NULL DEFAULT 1');
         $this->seedDefaults();
@@ -136,6 +146,20 @@ final class StudyRepository
         return $user === false ? null : $user;
     }
 
+    public function randomLoginTestimonial(): ?array
+    {
+        $rows = $this->pdo
+            ->query('SELECT id, author_name, author_role, quote FROM login_testimonials ORDER BY id ASC')
+            ->fetchAll();
+
+        if ($rows === []) {
+            return null;
+        }
+
+        $index = random_int(0, count($rows) - 1);
+        return $rows[$index];
+    }
+
     private function seedDefaults(): void
     {
         $tenantCount = (int) $this->pdo->query('SELECT COUNT(*) FROM tenants')->fetchColumn();
@@ -144,32 +168,71 @@ final class StudyRepository
         }
 
         $userCount = (int) $this->pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
-        if ($userCount > 0) {
+        if ($userCount === 0) {
+            $tenantId = (int) $this->pdo->query('SELECT id FROM tenants ORDER BY id ASC LIMIT 1')->fetchColumn();
+
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO users (tenant_id, name, email, password_hash, role)
+                 VALUES (:tenant_id, :name, :email, :password_hash, :role)'
+            );
+
+            $stmt->execute([
+                ':tenant_id' => $tenantId,
+                ':name' => 'Administrador Demo',
+                ':email' => 'admin@demo.local',
+                ':password_hash' => password_hash('admin123', PASSWORD_DEFAULT),
+                ':role' => 'admin',
+            ]);
+
+            $stmt->execute([
+                ':tenant_id' => $tenantId,
+                ':name' => 'Estudiante Demo',
+                ':email' => 'estudiante@demo.local',
+                ':password_hash' => password_hash('estudiante123', PASSWORD_DEFAULT),
+                ':role' => 'estudiante',
+            ]);
+        }
+
+        $testimonialCount = (int) $this->pdo->query('SELECT COUNT(*) FROM login_testimonials')->fetchColumn();
+        if ($testimonialCount > 0) {
             return;
         }
 
-        $tenantId = (int) $this->pdo->query('SELECT id FROM tenants ORDER BY id ASC LIMIT 1')->fetchColumn();
-
-        $stmt = $this->pdo->prepare(
-            'INSERT INTO users (tenant_id, name, email, password_hash, role)
-             VALUES (:tenant_id, :name, :email, :password_hash, :role)'
+        $testimonialStmt = $this->pdo->prepare(
+            'INSERT INTO login_testimonials (author_name, author_role, quote)
+             VALUES (:author_name, :author_role, :quote)'
         );
 
-        $stmt->execute([
-            ':tenant_id' => $tenantId,
-            ':name' => 'Administrador Demo',
-            ':email' => 'admin@demo.local',
-            ':password_hash' => password_hash('admin123', PASSWORD_DEFAULT),
-            ':role' => 'admin',
-        ]);
+        $defaults = [
+            [
+                'author_name' => 'Carlos M.',
+                'author_role' => 'Escalo a 10k USD/mes',
+                'quote' => 'La estructura y las herramientas de analisis cambiaron mis decisiones por completo.',
+            ],
+            [
+                'author_name' => 'Andrea P.',
+                'author_role' => 'Mentora de ecommerce',
+                'quote' => 'Ahora evaluamos cada producto con datos antes de invertir, y el margen mejoro mucho.',
+            ],
+            [
+                'author_name' => 'Juan S.',
+                'author_role' => 'Estudiante avanzado',
+                'quote' => 'La calculadora y el checklist me ahorran horas y reducen errores en cada lanzamiento.',
+            ],
+            [
+                'author_name' => 'Valentina R.',
+                'author_role' => 'Operaciones digitales',
+                'quote' => 'El portal nos dio un proceso claro para aprobar productos con criterio financiero.',
+            ],
+        ];
 
-        $stmt->execute([
-            ':tenant_id' => $tenantId,
-            ':name' => 'Estudiante Demo',
-            ':email' => 'estudiante@demo.local',
-            ':password_hash' => password_hash('estudiante123', PASSWORD_DEFAULT),
-            ':role' => 'estudiante',
-        ]);
+        foreach ($defaults as $row) {
+            $testimonialStmt->execute([
+                ':author_name' => $row['author_name'],
+                ':author_role' => $row['author_role'],
+                ':quote' => $row['quote'],
+            ]);
+        }
     }
 
     private function ensureColumn(string $table, string $column, string $columnDefinition): void

@@ -16,6 +16,9 @@ Ahora incluye:
 - autenticacion por sesion
 - modo multitenant (aislamiento por organizacion)
 - roles `admin` y `estudiante`
+- login redisenado basado en guias visuales de `Recursos/Diseño`
+- dashboard interno adaptado al mismo lenguaje visual
+- testimonios dinamicos en login desde SQLite
 
 ## Decisiones de arquitectura
 
@@ -42,10 +45,10 @@ Ahora incluye:
 - `app/Views/home.php`: plantilla HTML de la pantalla principal.
 - `app/Views/login.php`: plantilla HTML de inicio de sesion.
 - `public/assets/app.js`: fórmula y estado reactivo de calculadora.
-- `public/assets/app.css`: estilos base.
+- `public/assets/app.css`: sistema visual actualizado (auth + dashboard).
 - `app/config.php`: lectura de `.env` y armado de configuración de DB.
 - `app/Database.php`: conexión PDO.
-- `app/StudyRepository.php`: SQL de `qualitative_studies`.
+- `app/StudyRepository.php`: SQL de `qualitative_studies`, `users`, `tenants` y `login_testimonials`.
 
 ## Cómo correr el proyecto
 
@@ -87,6 +90,14 @@ Tabla: `users`
 - `role`
 - `created_at`
 
+Tabla: `login_testimonials`
+
+- `id`
+- `author_name`
+- `author_role`
+- `quote`
+- `created_at`
+
 ## Credenciales iniciales de demostracion
 
 - administrador:
@@ -97,6 +108,24 @@ Tabla: `users`
   - contrasena: `estudiante123`
 
 Estas cuentas se crean automaticamente si no existen usuarios.
+
+## Login dinamico y visual
+
+- La vista de login toma como referencia el diseno de `login_acceso_academia`.
+- Se removio intencionalmente el bloque de acceso con Google.
+- El panel izquierdo conserva fondo atmosferico (mesh/imagen + overlays).
+- El testimonio de la parte inferior izquierda ahora viene de BD:
+  - el controlador obtiene un testimonio aleatorio en cada carga (`randomLoginTestimonial`).
+  - si no hay datos, se usa fallback por defecto en vista.
+
+## Nota de continuidad Git
+
+Durante la sesion se detecto un repo inicializado con `HEAD` invalido (`refs/heads/` vacio).
+Correccion aplicada:
+
+- `git symbolic-ref HEAD refs/heads/main`
+
+Resultado: repo utilizable de nuevo desde CLI y GUI.
 
 ## Fórmulas de negocio (referencia)
 

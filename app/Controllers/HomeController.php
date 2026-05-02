@@ -44,6 +44,7 @@ final class HomeController
             return [
                 'view' => 'login',
                 'error' => null,
+                'testimonial' => $this->repo->randomLoginTestimonial(),
             ];
         }
 
@@ -95,6 +96,7 @@ final class HomeController
             return [
                 'view' => 'login',
                 'error' => 'Credenciales invalidas. Verifica correo y contrasena.',
+                'testimonial' => $this->repo->randomLoginTestimonial(),
             ];
         }
 

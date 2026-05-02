@@ -53,10 +53,17 @@ Si la tabla de usuarios esta vacia, el sistema crea:
 
 ## Archivos clave
 
-- `app/StudyRepository.php`: tablas, seeding, consultas por rol y organizacion.
-- `app/Controllers/HomeController.php`: login, logout, sesion, guardado.
-- `app/Views/login.php`: formulario de ingreso.
-- `app/Views/home.php`: barra de sesion y listado con responsable.
+- `app/StudyRepository.php`: tablas, seeding, consultas por rol y organizacion, y testimonios de login.
+- `app/Controllers/HomeController.php`: login, logout, sesion, guardado y carga de testimonio dinamico.
+- `app/Views/login.php`: formulario de ingreso responsive con panel de marca y testimonio.
+- `app/Views/home.php`: dashboard interno con barra de sesion y listado con responsable.
+
+## Experiencia de login (actual)
+
+- El login mantiene autenticacion por correo/contrasena tradicional.
+- Se muestra un testimonio aleatorio en la parte inferior izquierda del panel visual.
+- Los testimonios se cargan desde `login_testimonials` en SQLite.
+- No se habilito autenticacion con Google en esta version.
 
 ## Siguientes mejoras recomendadas
 

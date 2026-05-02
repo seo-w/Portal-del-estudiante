@@ -10,6 +10,7 @@ $view = $data['view'] ?? 'home';
 
 if ($view === 'login') {
     $error = $data['error'] ?? null;
+    $testimonial = $data['testimonial'] ?? null;
     require_once __DIR__ . '/../app/Views/login.php';
     exit;
 }

@@ -15,6 +15,22 @@ El sistema ahora es multitenant (multiempresa) con autenticacion por sesion y do
 
 Documentacion detallada en `MULTITENANT_ROLES.md`.
 
+## Estado visual actual
+
+Se aplico el sistema visual de las guias de `Recursos/Diseño` en dos frentes:
+
+- `app/Views/login.php`: layout premium responsive (columna izquierda de marca + formulario a la derecha).
+- `app/Views/home.php`: dashboard interno consistente con la identidad visual del login.
+- `public/assets/app.css`: base de estilos unificada para panel interno, tarjetas, inputs y tablas.
+
+### Login (implementado)
+
+- Responsive real (mobile en una columna, desktop en dos columnas).
+- Fondo atmosferico en columna izquierda (mesh + overlays de color y blur).
+- Formulario con labels flotantes, estados de foco y alerta de error.
+- Se elimino el bloque de "Ingresar con Google" por requerimiento.
+- Testimonio inferior izquierdo dinamico desde base de datos (uno aleatorio por carga).
+
 ## Estructura del proyecto
 
 - `public/index.php`: front-controller mínimo.
@@ -26,6 +42,7 @@ Documentacion detallada en `MULTITENANT_ROLES.md`.
 - `app/config.php`: carga de entorno y configuración unificada de base de datos.
 - `app/Database.php`: factory de conexión PDO desacoplada del motor.
 - `app/StudyRepository.php`: consultas SQL de la entidad `qualitative_studies`.
+- `app/StudyRepository.php`: consultas SQL de `qualitative_studies`, `users`, `tenants` y `login_testimonials`.
 - `storage/database/portal.sqlite`: archivo SQLite del MVP.
 - `.env.example`: plantilla de configuración.
 - `.env`: configuración local activa.
@@ -59,6 +76,27 @@ Por defecto el proyecto inicia con SQLite:
 ```env
 DB_DRIVER=sqlite
 DB_DATABASE=storage/database/portal.sqlite
+```
+
+### Tabla adicional de UX en login
+
+Se agrega `login_testimonials` para mostrar un testimonio distinto en cada carga del login:
+
+- `id`
+- `author_name`
+- `author_role`
+- `quote`
+- `created_at`
+
+El seeding inicial se hace automaticamente en `StudyRepository::seedDefaults()` cuando la tabla esta vacia.
+
+## Notas operativas (Git en Windows)
+
+- Si la carpeta ya tiene `.git`, en GitKraken se debe usar **Open Existing Repo**, no **Initialize**.
+- Si el repositorio se inicializa mal y `HEAD` queda invalido, se corrige con:
+
+```bash
+git symbolic-ref HEAD refs/heads/main
 ```
 
 ## Cambio futuro de motor (MySQL/PostgreSQL)
