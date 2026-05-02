@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Herramientas Especializadas - Club Ecommerce 24/7</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fcf8ff",
+                        "primary-container": "#4f46e5",
+                        "tertiary": "#7e3000",
+                        "text-primary": "#0F172A",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-bright": "#fcf8ff",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "accent-success": "#10B981",
+                        "secondary": "#006591",
+                        "surface-tint": "#4d44e3",
+                        "inverse-on-surface": "#f3effc",
+                        "on-surface-variant": "#464555",
+                        "bg-page": "#FFFFFF",
+                        "gradient-cta": "linear-gradient(135deg, #5B21B6, #4F46E5, #0EA5E9)",
+                        "border": "#E2E8F0",
+                        "border-subtle": "#F1F5F9",
+                        "tertiary-fixed": "#ffdbcc",
+                        "gradient-text": "linear-gradient(135deg, #5B21B6 0%, #4F46E5 50%, #0EA5E9 100%)",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#94A3B8",
+                        "on-error-container": "#93000a",
+                        "accent-warning": "#F59E0B",
+                        "on-secondary-container": "#004666",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "text-secondary": "#475569",
+                        "surface-variant": "#e4e1ee",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#89ceff",
+                        "secondary-container": "#39b8fd",
+                        "surface-container-high": "#eae6f4",
+                        "primary-fixed": "#e2dfff",
+                        "surface-dim": "#dcd8e5",
+                        "on-surface": "#1b1b24",
+                        "on-primary-fixed": "#0f0069",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container": "#f0ecf9",
+                        "inverse-primary": "#c3c0ff",
+                        "outline-variant": "#c7c4d8",
+                        "outline": "#777587",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "surface": "#fcf8ff",
+                        "accent-danger": "#EF4444",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-background": "#1b1b24",
+                        "on-tertiary": "#ffffff",
+                        "bg-subtle": "#F1F3F7",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "tertiary-container": "#a44100",
+                        "accent-violet": "#7C3AED",
+                        "bg-surface": "#F8F9FB",
+                        "inverse-surface": "#302f39",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container-highest": "#e4e1ee",
+                        "primary": "#3525cd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "grid-gap-lg": "24px",
+                        "gutter-mobile": "16px",
+                        "gutter-desktop": "24px",
+                        "container-max": "1280px",
+                        "grid-gap-md": "20px"
+                    },
+                    "fontFamily": {
+                        "h3-card": ["Plus Jakarta Sans"],
+                        "data-mono": ["Space Grotesk"],
+                        "h2-section": ["Plus Jakarta Sans"],
+                        "h1-page": ["Plus Jakarta Sans"],
+                        "body-lead": ["Manrope"],
+                        "h1-hero": ["Plus Jakarta Sans"],
+                        "body-base": ["Manrope"],
+                        "ui-label": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "h3-card": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "h2-section": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h1-page": ["42px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+                        "body-lead": ["18px", {"lineHeight": "1.7", "fontWeight": "400"}],
+                        "h1-hero": ["60px", {"lineHeight": "1.2", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "ui-label": ["13px", {"lineHeight": "1", "letterSpacing": "0.06em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bg-surface text-text-primary font-body-base antialiased flex h-screen overflow-hidden selection:bg-primary-container selection:text-white">
+<!-- SideNavBar Component -->
+<nav class="bg-white dark:bg-slate-900 font-plus-jakarta-sans antialiased fixed left-0 top-0 h-screen w-[260px] border-r border-slate-100 dark:border-slate-800 shadow-[4px_0_24px_rgba(0,0,0,0.02)] flex flex-col py-6 z-40">
+<!-- Header -->
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">school</span>
+</div>
+<h1 class="text-lg font-black text-slate-900 dark:text-white leading-none">Portal Estudiante</h1>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium ml-11">Importaciones &amp; Dropshipping</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 transition-transform active:scale-98 hover:bg-slate-100/80" href="#">
+<span class="material-symbols-outlined text-[22px]">grid_view</span>
+<span class="font-ui-label text-ui-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 transition-transform active:scale-98 hover:bg-slate-100/80" href="#">
+<span class="material-symbols-outlined text-[22px]">auto_stories</span>
+<span class="font-ui-label text-ui-label">Mis Cursos</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-indigo-50/50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 font-bold shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] translate-y-[1px] transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined text-[22px] fill">precision_manufacturing</span>
+<span class="font-ui-label text-ui-label">Herramientas IA</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 transition-transform active:scale-98 hover:bg-slate-100/80" href="#">
+<span class="material-symbols-outlined text-[22px]">groups</span>
+<span class="font-ui-label text-ui-label">Comunidad</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-all duration-200 transition-transform active:scale-98 hover:bg-slate-100/80" href="#">
+<span class="material-symbols-outlined text-[22px]">settings_suggest</span>
+<span class="font-ui-label text-ui-label">Configuración</span>
+</a>
+</div>
+<!-- Footer / CTA -->
+<div class="px-4 mt-auto space-y-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+<button class="w-full py-2.5 px-4 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-ui-label text-ui-label shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+                Soporte Premium
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[22px]">logout</span>
+<span class="font-ui-label text-ui-label">Cerrar Sesión</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[260px] h-full overflow-y-auto bg-bg-surface relative">
+<!-- Subtle Ambient Background Gradient -->
+<div class="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-primary-fixed/30 to-transparent pointer-events-none z-0"></div>
+<div class="max-w-container-max mx-auto px-gutter-desktop py-12 relative z-10">
+<!-- Page Header -->
+<div class="mb-12">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border-subtle mb-4">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-ui-label text-ui-label text-text-secondary">Suite de Herramientas Premium</span>
+</div>
+<h2 class="font-h1-page text-h1-page text-text-primary mb-4 tracking-tight">Herramientas Especializadas</h2>
+<p class="font-body-lead text-body-lead text-text-secondary max-w-2xl">
+                    Potencia tu análisis y creación con nuestras herramientas impulsadas por inteligencia artificial, diseñadas exclusivamente para escalar tus operaciones de e-commerce.
+                </p>
+</div>
+<!-- Tools Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-grid-gap-lg">
+<!-- Card 1: Estudio Cualitativo -->
+<article class="group relative bg-bg-page rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] hover:-translate-y-[2px] transition-all duration-300 border border-border overflow-hidden flex flex-col">
+<!-- Dynamic Top Border on Hover -->
+<div class="absolute top-0 left-0 w-full h-[3px] bg-transparent group-hover:bg-primary-container transition-colors duration-300"></div>
+<div class="p-8 flex-1 flex flex-col">
+<!-- Header -->
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-lg bg-[#4f46e5]/10 text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">science</span>
+</div>
+<h3 class="font-h3-card text-h3-card text-text-primary">Estudio Cualitativo</h3>
+</div>
+<!-- Description -->
+<p class="font-body-base text-body-base text-text-secondary mb-8">
+                            Analiza el mercado en profundidad. Descubre los dolores de tu cliente ideal, sus motivaciones de compra y el lenguaje exacto que utilizan para conectarte con ellos.
+                        </p>
+<!-- Features -->
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Generación de Buyer Personas detallados</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Análisis de reviews de competidores</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Extracción de ángulos de venta ganadores</span>
+</li>
+</ul>
+<!-- CTA -->
+<button class="w-full bg-bg-page border border-border hover:bg-bg-surface text-text-primary rounded-lg py-3 px-6 font-ui-label text-ui-label transition-colors duration-200">
+                            Abrir herramienta
+                        </button>
+</div>
+</article>
+<!-- Card 2: Estudio Financiero -->
+<article class="group relative bg-bg-page rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] hover:-translate-y-[2px] transition-all duration-300 border border-border overflow-hidden flex flex-col">
+<div class="absolute top-0 left-0 w-full h-[3px] bg-transparent group-hover:bg-accent-success transition-colors duration-300"></div>
+<div class="p-8 flex-1 flex flex-col">
+<!-- Header -->
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-lg bg-[#10B981]/10 text-accent-success flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">payments</span>
+</div>
+<h3 class="font-h3-card text-h3-card text-text-primary">Estudio Financiero</h3>
+</div>
+<!-- Description -->
+<p class="font-body-base text-body-base text-text-secondary mb-8">
+                            Proyecta la rentabilidad de tus productos antes de invertir. Calcula márgenes, costos de adquisición (CPA) viables y puntos de equilibrio con precisión milimétrica.
+                        </p>
+<!-- Features -->
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-accent-success mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Calculadora avanzada de ROAS mínimo</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-accent-success mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Simulador de escenarios de escalado</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-accent-success mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Desglose automático de costos ocultos</span>
+</li>
+</ul>
+<!-- CTA -->
+<button class="w-full bg-bg-page border border-border hover:bg-bg-surface text-text-primary rounded-lg py-3 px-6 font-ui-label text-ui-label transition-colors duration-200">
+                            Abrir herramienta
+                        </button>
+</div>
+</article>
+<!-- Card 3: Creador de Creativos IA -->
+<article class="group relative bg-bg-page rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] hover:-translate-y-[2px] transition-all duration-300 border border-border overflow-hidden flex flex-col">
+<div class="absolute top-0 left-0 w-full h-[3px] bg-transparent group-hover:bg-secondary-container transition-colors duration-300"></div>
+<div class="p-8 flex-1 flex flex-col">
+<!-- Header -->
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-lg bg-[#39b8fd]/10 text-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">palette</span>
+</div>
+<h3 class="font-h3-card text-h3-card text-text-primary">Creador de Creativos IA</h3>
+</div>
+<!-- Description -->
+<p class="font-body-base text-body-base text-text-secondary mb-8">
+                            Genera scripts para videos y diseños de imágenes de alto impacto orientados a la conversión. Supera el bloqueo creativo con frameworks probados en el mercado.
+                        </p>
+<!-- Features -->
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-secondary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Scripts para TikTok Ads &amp; Reels (AIDA, PAS)</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-secondary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Generación de Hooks (Ganchos) virales</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] text-secondary-container mt-0.5">check_circle</span>
+<span class="font-body-base text-[15px] text-text-secondary">Sugerencias visuales y de edición automáticas</span>
+</li>
+</ul>
+<!-- CTA -->
+<button class="w-full bg-bg-page border border-border hover:bg-bg-surface text-text-primary rounded-lg py-3 px-6 font-ui-label text-ui-label transition-colors duration-200">
+                            Abrir herramienta
+                        </button>
+</div>
+</article>
+</div>
+</div>
+</main>
+</body></html>

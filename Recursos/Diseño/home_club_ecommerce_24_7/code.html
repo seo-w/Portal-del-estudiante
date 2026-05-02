@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Club Ecommerce 24/7 - Academia de Alto Rendimiento</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#fcf8ff",
+                        "primary-container": "#4f46e5",
+                        "tertiary": "#7e3000",
+                        "text-primary": "#0F172A",
+                        "surface-container-low": "#f5f2ff",
+                        "surface-bright": "#fcf8ff",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "accent-success": "#10B981",
+                        "secondary": "#006591",
+                        "surface-tint": "#4d44e3",
+                        "inverse-on-surface": "#f3effc",
+                        "on-surface-variant": "#464555",
+                        "bg-page": "#FFFFFF",
+                        "border": "#E2E8F0",
+                        "border-subtle": "#F1F5F9",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#94A3B8",
+                        "on-error-container": "#93000a",
+                        "accent-warning": "#F59E0B",
+                        "on-secondary-container": "#004666",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "text-secondary": "#475569",
+                        "surface-variant": "#e4e1ee",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#89ceff",
+                        "secondary-container": "#39b8fd",
+                        "surface-container-high": "#eae6f4",
+                        "primary-fixed": "#e2dfff",
+                        "surface-dim": "#dcd8e5",
+                        "on-surface": "#1b1b24",
+                        "on-primary-fixed": "#0f0069",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container": "#f0ecf9",
+                        "inverse-primary": "#c3c0ff",
+                        "outline-variant": "#c7c4d8",
+                        "outline": "#777587",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "surface": "#fcf8ff",
+                        "accent-danger": "#EF4444",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-background": "#1b1b24",
+                        "on-tertiary": "#ffffff",
+                        "bg-subtle": "#F1F3F7",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "tertiary-container": "#a44100",
+                        "accent-violet": "#7C3AED",
+                        "bg-surface": "#F8F9FB",
+                        "inverse-surface": "#302f39",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container-highest": "#e4e1ee",
+                        "primary": "#3525cd"
+                    },
+                    backgroundImage: {
+                        'gradient-cta': 'linear-gradient(135deg, #5B21B6, #4F46E5, #0EA5E9)',
+                        'gradient-text': 'linear-gradient(135deg, #5B21B6 0%, #4F46E5 50%, #0EA5E9 100%)',
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "grid-gap-lg": "24px",
+                        "gutter-mobile": "16px",
+                        "gutter-desktop": "24px",
+                        "container-max": "1280px",
+                        "grid-gap-md": "20px"
+                    },
+                    fontFamily: {
+                        "h3-card": ["Plus Jakarta Sans", "sans-serif"],
+                        "data-mono": ["Space Grotesk", "monospace"],
+                        "h2-section": ["Plus Jakarta Sans", "sans-serif"],
+                        "h1-page": ["Plus Jakarta Sans", "sans-serif"],
+                        "body-lead": ["Manrope", "sans-serif"],
+                        "h1-hero": ["Plus Jakarta Sans", "sans-serif"],
+                        "body-base": ["Manrope", "sans-serif"],
+                        "ui-label": ["Manrope", "sans-serif"]
+                    },
+                    fontSize: {
+                        "h3-card": ["20px", { lineHeight: "1.4", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "data-mono": ["14px", { letterSpacing: "0.01em", fontWeight: "500" }],
+                        "h2-section": ["32px", { lineHeight: "1.3", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "h1-page": ["42px", { lineHeight: "1.2", letterSpacing: "-0.03em", fontWeight: "800" }],
+                        "body-lead": ["18px", { lineHeight: "1.7", fontWeight: "400" }],
+                        "h1-hero": ["60px", { lineHeight: "1.2", letterSpacing: "-0.04em", fontWeight: "800" }],
+                        "body-base": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "ui-label": ["13px", { lineHeight: "1", letterSpacing: "0.06em", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-gradient-primary {
+            background-image: linear-gradient(135deg, #5B21B6 0%, #4F46E5 50%, #0EA5E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        /* Subtle mesh gradient simulation for background */
+        .bg-mesh-subtle {
+            position: relative;
+            overflow: hidden;
+            background-color: #fcf8ff;
+        }
+        .bg-mesh-subtle::before,
+        .bg-mesh-subtle::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-mesh-subtle::before {
+            background: #7C3AED;
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -100px;
+        }
+        .bg-mesh-subtle::after {
+            background: #0EA5E9;
+            width: 500px;
+            height: 500px;
+            top: 100px;
+            right: -150px;
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary antialiased flex flex-col min-h-screen relative font-body-base text-body-base">
+<!-- TopNavBar Component -->
+<header class="fixed top-0 w-full h-16 border-b border-slate-100 dark:border-slate-800 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none flex justify-between items-center px-6 max-w-full font-plus-jakarta-sans text-sm font-medium">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Club Ecommerce 24/7</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors font-ui-label text-ui-label hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 px-3 py-1.5 rounded-md">
+                Ver Catálogo
+            </button>
+<div class="flex items-center gap-3 border-l border-border pl-6">
+<button class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden ml-2 ring-2 ring-border-subtle cursor-pointer hover:scale-95 opacity-80 transition-transform">
+<img alt="Avatar del Estudiante" class="w-full h-full object-cover" data-alt="A small, circular profile avatar showing a professional headshot of a young student against a light, neutral background. The lighting is soft and flattering, fitting perfectly within a clean, light-mode dashboard UI. The overall aesthetic is polished, trustworthy, and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo0Ycdd8QRaeSmWH34LTX_TTZaYJP0zC3h2Q72LZOxjTtojXM7Mu6G77TRZjSwGNGnBVpYQdVNSpXGWcM5qy6J8tQJsUAjPbQdrQivVJoV8a6HorXiyF1bcHKNPhh0aOe5CipzY1fDqP5KtlTzhvV2Gjf3U7E1nSbvkzQS6s6DVkEOHx8I_A2ZNc5OdCjyPYh3zywBCS1NXaurdL5wbqS_6xEgeRsHisuFy74Eq8l4DpCYNo5bgmeVRNTRAucLGsXQOEjoNN2trwiG"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-[64px]">
+<!-- Hero Section -->
+<section class="bg-mesh-subtle relative min-h-[921px] flex flex-col items-center justify-center px-gutter-mobile md:px-gutter-desktop pt-24 pb-32">
+<div class="relative z-10 max-w-[900px] mx-auto text-center flex flex-col items-center">
+<h1 class="font-h1-hero text-h1-hero mb-6 max-w-4xl tracking-tight text-text-primary">
+<span class="text-gradient-primary">Importa. Vende. Escala.</span><br/>
+                    La academia definitiva.
+                </h1>
+<p class="font-body-lead text-body-lead text-text-secondary max-w-2xl mb-12">
+                    Domina el dropshipping y las importaciones con metodologías probadas. Accede a herramientas exclusivas, comunidad activa y soporte premium en una plataforma diseñada para el éxito.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 mb-24">
+<button class="bg-gradient-cta text-on-primary font-ui-label text-ui-label px-[28px] py-[14px] rounded-lg shadow-[0_4px_12px_rgba(79,70,229,0.2)] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(79,70,229,0.3)] transition-all duration-300">
+                        Comenzar Ahora
+                    </button>
+<button class="bg-surface text-text-primary border border-border font-ui-label text-ui-label px-[28px] py-[14px] rounded-lg hover:bg-bg-subtle transition-colors duration-200">
+                        Ver Plan de Estudios
+                    </button>
+</div>
+<!-- Stats Row -->
+<div class="flex flex-wrap justify-center gap-12 sm:gap-24 mb-16 px-8 py-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-border-subtle shadow-sm">
+<div class="flex flex-col items-center">
+<span class="font-data-mono text-data-mono text-primary-container text-2xl mb-1">2,400+</span>
+<span class="font-ui-label text-ui-label text-text-muted uppercase tracking-wider">Estudiantes</span>
+</div>
+<div class="w-px h-12 bg-border hidden sm:block"></div>
+<div class="flex flex-col items-center">
+<span class="font-data-mono text-data-mono text-primary-container text-2xl mb-1">97%</span>
+<span class="font-ui-label text-ui-label text-text-muted uppercase tracking-wider">Tasa de Éxito</span>
+</div>
+<div class="w-px h-12 bg-border hidden sm:block"></div>
+<div class="flex flex-col items-center">
+<span class="font-data-mono text-data-mono text-primary-container text-2xl mb-1">50+</span>
+<span class="font-ui-label text-ui-label text-text-muted uppercase tracking-wider">Módulos Pro</span>
+</div>
+</div>
+<!-- Floating Dashboard Screenshot -->
+<div class="w-full max-w-[1024px] relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-accent-violet to-secondary-container rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+<div class="relative rounded-xl overflow-hidden border border-border-subtle bg-white shadow-[0_40px_80px_-20px_rgba(79,70,229,0.12)] ring-1 ring-black/5 transform transition-transform duration-500 hover:-translate-y-2">
+<!-- Top bar simulation -->
+<div class="h-10 border-b border-border-subtle bg-bg-surface flex items-center px-4 gap-2">
+<div class="w-3 h-3 rounded-full bg-border"></div>
+<div class="w-3 h-3 rounded-full bg-border"></div>
+<div class="w-3 h-3 rounded-full bg-border"></div>
+</div>
+<img alt="Dashboard Interface" class="w-full h-auto object-cover" data-alt="A highly detailed screenshot of a modern, sophisticated financial or educational dashboard interface. The UI features crisp data visualizations, clean typography in JetBrains Mono and Plus Jakarta Sans, and a structured layout with sidebar navigation. The color palette is primarily pure white and soft gray with vibrant indigo and emerald accents. The image is presented with a pristine, light-mode aesthetic, exuding professional trust and high-end technological capability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoDk8GFbttfDzXVe5xxDAgUI_n51WKFULCUJ5nUGqRuCyFdAX7bgV-1ZL8U77-sHP8KMh0VjoC9TOHQi3gvOZWFKli0PoxJrjN97bfIRUHq_ka4sfRCbYRNW-Y2jBgx8cYNEZ-mKm5GqPxws5oxEEoD7xqJIDp7z_-A7_DDH-VH5roOpct73qEIqhUD1yogiy3KXTOBdgJBPuOZJ0FPN4yjJeUfUd95orpK8896MmtgiJ1_NSTrqVktpabF53hpot4-fUvt2U4I5pT"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-100 dark:border-slate-900 border-t border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs font-medium text-slate-400 dark:text-slate-600 font-bold text-slate-400">
+                © 2024 Club Ecommerce 24/7 - Academia de Alto Rendimiento
+            </p>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="text-xs font-medium text-slate-400 dark:text-slate-600 text-slate-400 hover:text-indigo-400 underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">
+                    Términos de Servicio
+                </a>
+<a class="text-xs font-medium text-slate-400 dark:text-slate-600 text-slate-400 hover:text-indigo-400 underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">
+                    Privacidad
+                </a>
+<a class="text-xs font-medium text-slate-400 dark:text-slate-600 text-slate-400 hover:text-indigo-400 underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">
+                    Contacto
+                </a>
+<a class="text-xs font-medium text-slate-400 dark:text-slate-600 text-slate-400 hover:text-indigo-400 underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">
+                    Afiliados
+                </a>
+</nav>
+</div>
+</footer>
+</body></html>
