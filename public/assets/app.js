@@ -5,6 +5,8 @@ function calculator() {
     };
 
     return {
+        currentView: 'dashboard',
+        activeTool: null,
         product_name: '',
         checklist_score: 0,
         costo_mercancia_vendida: 60000,
