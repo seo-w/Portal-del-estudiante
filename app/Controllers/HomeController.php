@@ -27,6 +27,10 @@ final class HomeController
             session_start();
         }
 
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
         $action = $_GET['action'] ?? '';
 
         if ($action === 'logout') {
@@ -141,6 +145,15 @@ final class HomeController
 
     private function login(): array
     {
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if ($csrfToken === '' || $csrfToken !== ($_SESSION['csrf_token'] ?? '')) {
+            return [
+                'view' => 'login',
+                'error' => 'Error de seguridad (CSRF). Por favor intenta de nuevo.',
+                'testimonial' => $this->repo->randomLoginTestimonial(),
+            ];
+        }
+
         $email = trim($_POST['email'] ?? '');
         $password = (string) ($_POST['password'] ?? '');
         $user = $this->repo->findUserByEmail($email);

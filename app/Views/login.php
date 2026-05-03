@@ -47,13 +47,17 @@
                         "ui-label": ["Manrope"]
                     },
                     fontSize: {
+                        "xs": ["16px", { lineHeight: "1.5" }],
+                        "sm": ["16px", { lineHeight: "1.5" }],
+                        "base": ["16px", { lineHeight: "1.6" }],
                         "h3-card": ["20px", { lineHeight: "1.4", letterSpacing: "-0.01em", fontWeight: "600" }],
-                        "data-mono": ["14px", { letterSpacing: "0.01em", fontWeight: "500" }],
+                        "data-mono": ["16px", { letterSpacing: "0.01em", fontWeight: "500" }],
                         "h2-section": ["32px", { lineHeight: "1.3", letterSpacing: "-0.02em", fontWeight: "700" }],
                         "h1-page": ["42px", { lineHeight: "1.2", letterSpacing: "-0.03em", fontWeight: "800" }],
                         "body-lead": ["18px", { lineHeight: "1.7", fontWeight: "400" }],
+                        "h1-hero": ["60px", { lineHeight: "1.2", letterSpacing: "-0.04em", fontWeight: "800" }],
                         "body-base": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
-                        "ui-label": ["13px", { lineHeight: "1", letterSpacing: "0.06em", fontWeight: "500" }]
+                        "ui-label": ["16px", { lineHeight: "1.4", letterSpacing: "0.06em", fontWeight: "600" }]
                     }
                 }
             }
@@ -69,9 +73,11 @@
             top: 0.875rem;
             color: #4f46e5;
         }
+        [x-cloak] { display: none !important; }
     </style>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-bg-page text-text-primary font-body-base text-body-base antialiased selection:bg-primary-container selection:text-white">
+<body class="bg-bg-page text-text-primary font-body-base text-body-base antialiased selection:bg-primary-container selection:text-white" x-data="{ showPass: false }">
 <?php
 $authorName = 'Carlos M.';
 $authorRole = 'Escalo a 10k USD/mes';
@@ -85,7 +91,10 @@ if (is_array($testimonial)) {
 ?>
 <main class="min-h-screen w-full flex flex-col lg:flex-row">
     <section class="hidden lg:flex w-1/2 relative flex-col items-center justify-between p-12 overflow-hidden bg-primary">
-        <div class="absolute inset-0 z-0 bg-cover bg-center mix-blend-screen opacity-90" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOzIgsy-dVZ88kv6m6uCMgQ7VxSyyqJWgYv6uLdG3awbAVAVt2_o8Q5IE2GIrv89GBxYBJVbLAGIeflhMKskWuWYtPAlnaGJKugaybNpEikrCXBsq0qg0au98FkcODn2zpVzizkWi13k1tl6d2DcT9FH6t4WLNHFl4LiCrcB--doypYdhIUX_FbtzrpQAOwLtJWP1O9GYi40TENYugzuGQM6hXihDuJHqJ-BWyyp1LEWCNS8_tKz_aOyGNifLQDMc00ieLHjNM93ky');"></div>
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOzIgsy-dVZ88kv6m6uCMgQ7VxSyyqJWgYv6uLdG3awbAVAVt2_o8Q5IE2GIrv89GBxYBJVbLAGIeflhMKskWuWYtPAlnaGJKugaybNpEikrCXBsq0qg0au98FkcODn2zpVzizkWi13k1tl6d2DcT9FH6t4WLNHFl4LiCrcB--doypYdhIUX_FbtzrpQAOwLtJWP1O9GYi40TENYugzuGQM6hXihDuJHqJ-BWyyp1LEWCNS8_tKz_aOyGNifLQDMc00ieLHjNM93ky" 
+             alt="Ambiente Académico" 
+             class="absolute inset-0 z-0 w-full h-full object-cover mix-blend-screen opacity-90"
+             loading="lazy">
         <div class="absolute inset-0 z-0 bg-gradient-to-b from-primary/40 to-primary/80 backdrop-blur-[2px]"></div>
         <div class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_15%,rgba(255,255,255,0.22),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.25),transparent_50%)]"></div>
 
@@ -107,12 +116,12 @@ if (is_array($testimonial)) {
 
         <div class="z-10 w-full max-w-md bg-white/10 backdrop-blur-md border border-white/10 p-6 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
             <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 rounded-full bg-white/15 border-2 border-white/25 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-white/15 border-2 border-white/25 flex items-center justify-center overflow-hidden">
                     <span class="material-symbols-outlined text-white">person</span>
                 </div>
                 <div>
-                    <p class="font-ui-label text-ui-label text-white m-0"><?= htmlspecialchars($authorName) ?></p>
-                    <p class="font-data-mono text-data-mono text-primary-fixed-dim text-xs m-0 mt-0.5"><?= htmlspecialchars($authorRole) ?></p>
+                    <p class="font-ui-label text-ui-label text-white m-0 leading-none"><?= htmlspecialchars($authorName) ?></p>
+                    <p class="font-data-mono text-data-mono text-primary-fixed-dim text-sm m-0 mt-1"><?= htmlspecialchars($authorRole) ?></p>
                 </div>
             </div>
             <p class="font-body-base text-body-base text-white/90 italic m-0">
@@ -138,41 +147,63 @@ if (is_array($testimonial)) {
             </div>
 
             <?php if (!empty($error)): ?>
-                <div class="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                <div class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-4 text-sm flex items-center gap-3 shadow-sm">
+                    <span class="material-symbols-outlined text-red-500">error</span>
                     <?= htmlspecialchars((string) $error) ?>
                 </div>
             <?php endif; ?>
 
-            <form action="/?action=login" class="space-y-5" method="POST">
+            <form action="/?action=login" class="space-y-6" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                
+                <!-- Honeypot -->
+                <div class="hidden">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </div>
+
                 <div class="relative group">
-                    <input class="float-input block rounded-lg px-4 pb-2.5 pt-6 w-full font-body-base text-body-base text-text-primary bg-surface-container-lowest border border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary-container focus:shadow-[0_0_0_3px_rgba(79,70,229,0.12)] transition-all bg-transparent z-10 relative peer" id="email" name="email" placeholder=" " required type="email">
-                    <label class="float-label absolute font-ui-label text-ui-label text-text-muted duration-300 transform top-4 z-0 origin-[0] start-4 peer-focus:text-primary-container" for="email">
-                        Correo Electronico
+                    <input class="float-input block rounded-xl px-4 pb-3 pt-6 w-full font-body-base text-body-base text-text-primary bg-surface-container-lowest border border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary-container focus:shadow-[0_0_0_3px_rgba(79,70,229,0.12)] transition-all bg-transparent z-10 relative peer" id="email" name="email" placeholder=" " required type="email" aria-label="Correo Electrónico">
+                    <label class="float-label absolute font-ui-label text-ui-label text-text-muted duration-300 transform top-4 z-0 origin-[0] start-4 peer-focus:text-primary-container pointer-events-none" for="email">
+                        Correo Electrónico
                     </label>
                 </div>
 
                 <div class="relative group">
-                    <input class="float-input block rounded-lg px-4 pb-2.5 pt-6 w-full font-body-base text-body-base text-text-primary bg-surface-container-lowest border border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary-container focus:shadow-[0_0_0_3px_rgba(79,70,229,0.12)] transition-all bg-transparent z-10 relative peer" id="password" name="password" placeholder=" " required type="password">
-                    <label class="float-label absolute font-ui-label text-ui-label text-text-muted duration-300 transform top-4 z-0 origin-[0] start-4 peer-focus:text-primary-container" for="password">
-                        Contrasena
+                    <input class="float-input block rounded-xl px-4 pb-3 pt-6 w-full font-body-base text-body-base text-text-primary bg-surface-container-lowest border border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary-container focus:shadow-[0_0_0_3px_rgba(79,70,229,0.12)] transition-all bg-transparent z-10 relative peer pr-12" id="password" name="password" placeholder=" " required :type="showPass ? 'text' : 'password'" aria-label="Contraseña">
+                    <label class="float-label absolute font-ui-label text-ui-label text-text-muted duration-300 transform top-4 z-0 origin-[0] start-4 peer-focus:text-primary-container pointer-events-none" for="password">
+                        Contraseña
                     </label>
+                    <button type="button" @click="showPass = !showPass" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-text-muted hover:text-primary transition-colors focus:outline-none">
+                        <span class="material-symbols-outlined text-xl" x-text="showPass ? 'visibility_off' : 'visibility'"></span>
+                    </button>
                 </div>
 
                 <div class="flex items-center justify-end w-full">
-                    <a class="font-ui-label text-ui-label text-primary-container hover:text-primary transition-colors" href="#">
-                        Olvidaste tu contrasena?
+                    <a class="font-ui-label text-sm text-primary-container hover:text-primary transition-colors font-bold" href="#">
+                        ¿Olvidaste tu contraseña?
                     </a>
                 </div>
 
-                <button class="w-full flex justify-center py-3.5 px-7 rounded-lg text-white font-ui-label text-ui-label shadow-sm hover:opacity-90 hover:-translate-y-0.5 transition-all duration-200" style="background: linear-gradient(135deg, #5B21B6, #4F46E5, #0EA5E9);" type="submit">
+                <button class="w-full flex justify-center py-4 px-7 rounded-xl text-white font-ui-label font-bold shadow-lg shadow-primary/20 hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" style="background: linear-gradient(135deg, #3525cd, #4f46e5, #6366f1);" type="submit">
                     Ingresar al Portal
                 </button>
             </form>
 
-            <div class="rounded-lg border border-border bg-slate-50 px-4 py-3 text-sm text-text-secondary">
-                <p class="m-0"><strong>Credenciales de prueba:</strong></p>
-                <p class="m-0 mt-1">Administrador: admin@demo.local / admin123</p>
-                <p class="m-0">Estudiante: estudiante@demo.local / estudiante123</p>
+            <div class="rounded-2xl border border-border bg-slate-50 p-6 shadow-sm border-dashed">
+                <div class="flex items-center gap-3 mb-3 text-slate-600">
+                    <span class="material-symbols-outlined text-xl">key</span>
+                    <p class="font-bold text-sm m-0 uppercase tracking-widest">Credenciales de prueba</p>
+                </div>
+                <div class="space-y-2 text-sm text-text-secondary">
+                    <div class="flex justify-between items-center p-2 rounded-lg bg-white border border-border">
+                        <span class="font-medium">Admin:</span>
+                        <code class="text-primary font-bold">admin@demo.local / admin123</code>
+                    </div>
+                    <div class="flex justify-between items-center p-2 rounded-lg bg-white border border-border">
+                        <span class="font-medium">Estudiante:</span>
+                        <code class="text-primary font-bold">estudiante@demo.local / estudiante123</code>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
