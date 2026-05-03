@@ -12,6 +12,7 @@ function calculator() {
         isUserModalOpen: false,
         isChatOpen: false,
         isTyping: false,
+        activeConfigTool: null,
         chatMessages: [
             { role: 'assistant', content: '¡Hola! Soy tu asistente IA. ¿En qué puedo ayudarte con tu estudio cualitativo o financiero hoy?' }
         ],
@@ -273,6 +274,48 @@ function calculator() {
                 }
             } catch (error) {
                 console.error('Error saving settings:', error);
+            }
+        },
+
+        async testDb(config) {
+            try {
+                const response = await fetch('/?action=test_db_connection', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                alert('Error al probar conexión');
+            }
+        },
+
+        async migrateDb(config) {
+            if (!confirm('¿Estás seguro de migrar? Esto moverá todos los datos de SQLite a la nueva base de datos MySQL.')) return;
+            try {
+                const response = await fetch('/?action=migrate_db', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) window.location.reload();
+            } catch (error) {
+                alert('Error durante la migración');
+            }
+        },
+
+        async resetDb() {
+            if (!confirm('¿Estás seguro? Esto borrará TODA la información de la base de datos actual y la reiniciará.')) return;
+            try {
+                const response = await fetch('/?action=reset_db', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) window.location.reload();
+            } catch (error) {
+                alert('Error al reiniciar base de datos');
             }
         },
         init() {

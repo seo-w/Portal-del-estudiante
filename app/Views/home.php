@@ -109,14 +109,17 @@
                         "ui-label": ["Manrope"]
                     },
                     fontSize: {
+                        "xs": ["16px", { lineHeight: "1.5" }],
+                        "sm": ["16px", { lineHeight: "1.5" }],
+                        "base": ["16px", { lineHeight: "1.6" }],
                         "h3-card": ["20px", { lineHeight: "1.4", letterSpacing: "-0.01em", fontWeight: "600" }],
-                        "data-mono": ["14px", { letterSpacing: "0.01em", fontWeight: "500" }],
+                        "data-mono": ["16px", { letterSpacing: "0.01em", fontWeight: "500" }],
                         "h2-section": ["32px", { lineHeight: "1.3", letterSpacing: "-0.02em", fontWeight: "700" }],
                         "h1-page": ["42px", { lineHeight: "1.2", letterSpacing: "-0.03em", fontWeight: "800" }],
                         "body-lead": ["18px", { lineHeight: "1.7", fontWeight: "400" }],
                         "h1-hero": ["60px", { lineHeight: "1.2", letterSpacing: "-0.04em", fontWeight: "800" }],
                         "body-base": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
-                        "ui-label": ["13px", { lineHeight: "1", letterSpacing: "0.06em", fontWeight: "500" }]
+                        "ui-label": ["16px", { lineHeight: "1.4", letterSpacing: "0.06em", fontWeight: "600" }]
                     }
                 }
             }
@@ -130,11 +133,22 @@
         .material-symbols-outlined.fill {
             font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
         }
+
         @keyframes jump {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
         }
-        .dot-jump { animation: jump 0.6s infinite; }
+
+        .dot-jump {
+            animation: jump 0.6s infinite;
+        }
     </style>
 </head>
 
@@ -178,14 +192,12 @@
         :class="isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'">
         <!-- Header -->
         <div class="px-6 mb-8 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white mb-4">
+            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white ">
                 <span class="material-symbols-outlined">rocket_launch</span>
             </div>
             <div>
                 <h2 class="text-lg font-h2-section text-text-primary leading-tight tracking-tight">Portal Estudiante
                 </h2>
-                <p class="text-xs font-medium text-text-muted uppercase tracking-widest mt-1">
-                    <?= htmlspecialchars((string) $user['tenant_name']) ?></p>
             </div>
         </div>
 
@@ -213,10 +225,10 @@
                 <!-- Sub-menu: Estudio Cualitativo -->
                 <div x-show="currentView === 'herramientas'" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 -translate-y-2"
-                    x-transition:enter-end="opacity-100 translate-y-0" class="pl-12 pr-4 space-y-1">
+                    x-transition:enter-end="opacity-100 translate-y-0" class="pl-6 pr-4 space-y-1">
                     <a href="#"
                         x-on:click.prevent="activeTool = 'estudio-cualitativo'; $nextTick(() => window.scrollTo({top: 0, behavior: 'smooth'}))"
-                        class="flex items-center gap-2 py-2 px-3 rounded-lg text-xs transition-all"
+                        class="flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all"
                         :class="activeTool === 'estudio-cualitativo' ? 'bg-primary/5 text-primary font-bold border-l-2 border-primary shadow-sm' : 'text-text-muted hover:text-primary hover:bg-bg-surface'">
                         <span class="w-1.5 h-1.5 rounded-full"
                             :class="activeTool === 'estudio-cualitativo' ? 'bg-primary' : 'bg-text-muted/30'"></span>
@@ -232,12 +244,34 @@
                     <span class="material-symbols-outlined text-[22px]">group</span>
                     <span>Usuarios</span>
                 </a>
-                <a href="#configuracion" @click.prevent="currentView = 'configuracion'; isMobileMenuOpen = false"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
-                    :class="currentView === 'configuracion' ? 'bg-primary/10 text-primary font-bold' : 'text-text-secondary hover:bg-bg-subtle'">
-                    <span class="material-symbols-outlined text-[22px]">settings</span>
-                    <span>Configuración</span>
-                </a>
+
+                <div class="flex flex-col gap-1">
+                    <a href="#configuracion"
+                        @click.prevent="currentView = 'configuracion'; activeConfigTool = null; isMobileMenuOpen = false"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
+                        :class="currentView === 'configuracion' ? 'bg-primary/10 text-primary font-bold' : 'text-text-secondary hover:bg-bg-subtle'">
+                        <span class="material-symbols-outlined text-[22px]">settings</span>
+                        <span>Configuración</span>
+                    </a>
+
+                    <!-- Sub-menu Configuración -->
+                    <div x-show="currentView === 'configuracion'" x-transition class="pl-6 pr-4 space-y-1 pb-2">
+                        <a href="#" @click.prevent="activeConfigTool = 'ia'"
+                            class="flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all"
+                            :class="activeConfigTool === 'ia' ? 'bg-primary/5 text-primary font-bold border-l-2 border-primary shadow-sm' : 'text-text-muted hover:text-primary hover:bg-bg-surface'">
+                            <span class="w-1.5 h-1.5 rounded-full"
+                                :class="activeConfigTool === 'ia' ? 'bg-primary' : 'bg-text-muted/30'"></span>
+                            IA & Modelos
+                        </a>
+                        <a href="#" @click.prevent="activeConfigTool = 'db'"
+                            class="flex items-center gap-2 py-2 px-3 rounded-lg text-sm transition-all"
+                            :class="activeConfigTool === 'db' ? 'bg-primary/5 text-primary font-bold border-l-2 border-primary shadow-sm' : 'text-text-muted hover:text-primary hover:bg-bg-surface'">
+                            <span class="w-1.5 h-1.5 rounded-full"
+                                :class="activeConfigTool === 'db' ? 'bg-primary' : 'bg-text-muted/30'"></span>
+                            Base de Datos
+                        </a>
+                    </div>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -246,7 +280,7 @@
             <a class="flex items-center gap-3 px-2 py-3 text-text-muted hover:text-text-primary transition-colors"
                 href="/?action=logout">
                 <span class="material-symbols-outlined text-[20px]">logout</span>
-                <span class="text-xs font-semibold uppercase tracking-wider">Cerrar Sesión</span>
+                <span class="text-sm font-semibold uppercase tracking-wider">Cerrar Sesión</span>
             </a>
         </div>
     </nav>
@@ -261,7 +295,8 @@
             <header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4" id="dashboard">
                 <div>
                     <h1 class="font-h1-page text-h1-page text-text-primary">Hola,
-                        <?= htmlspecialchars((string) $user['name']) ?></h1>
+                        <?= htmlspecialchars((string) $user['name']) ?>
+                    </h1>
                     <p class="font-body-lead text-body-lead text-text-secondary mt-2 max-w-2xl">Bienvenido de vuelta.
                         Administra tu progreso y ejecuta herramientas desde un panel centralizado.</p>
                 </div>
@@ -303,7 +338,8 @@
                         <span class="material-symbols-outlined text-accent-violet">inventory_2</span>
                     </div>
                     <p class="text-xl font-h3-card text-text-primary">
-                        <?= htmlspecialchars((string) ($lastStudy['product_name'] ?? 'Sin datos')) ?></p>
+                        <?= htmlspecialchars((string) ($lastStudy['product_name'] ?? 'Sin datos')) ?>
+                    </p>
                 </article>
             </section>
 
@@ -315,7 +351,7 @@
                         <table class="min-w-full text-sm">
                             <thead>
                                 <tr
-                                    class="border-b border-border text-text-muted uppercase text-[10px] tracking-widest font-bold">
+                                    class="border-b border-border text-text-muted uppercase text-sm tracking-widest font-bold">
                                     <th class="text-left py-4 px-2">Fecha</th>
                                     <th class="text-left py-4 px-2">Producto</th>
                                     <th class="text-left py-4 px-2">Checklist</th>
@@ -333,7 +369,7 @@
                                         <td class="py-4 px-2 font-semibold text-text-primary"
                                             x-text="study.product_name"></td>
                                         <td class="py-4 px-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-bold"
+                                            <span class="px-2 py-0.5 rounded text-sm font-bold"
                                                 :class="study.checklist_score >= 40 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'"
                                                 x-text="study.checklist_score + ' pts'"></span>
                                         </td>
@@ -457,7 +493,7 @@
                             <template x-for="(cat, index) in categories" :key="index">
                                 <div class="flex items-center">
                                     <button type="button" x-on:click="currentStep = (index + 1)"
-                                        class="px-2 md:px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2"
+                                        class="px-2 md:px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest transition-all flex items-center gap-2"
                                         :class="currentStep === (index + 1) ? 'bg-primary text-white shadow-md' : 'text-text-muted hover:bg-bg-surface'">
                                         <span
                                             class="w-5 h-5 rounded-full flex items-center justify-center text-[9px] border"
@@ -497,7 +533,7 @@
                                                 <template x-for="(opt, optIdx) in item.options" :key="optIdx">
                                                     <button type="button"
                                                         x-on:click="item.score = (optIdx + 1); recalcChecklist()"
-                                                        class="px-3 py-2 rounded-lg border transition-all text-xs font-bold flex items-center justify-center gap-2"
+                                                        class="px-3 py-2 rounded-lg border transition-all text-sm font-bold flex items-center justify-center gap-2"
                                                         :class="item.score === (optIdx + 1) 
                                                     ? (optIdx === 0 ? 'bg-red-50 border-red-500 text-red-700' : (optIdx === 1 ? 'bg-amber-50 border-amber-500 text-amber-700' : 'bg-emerald-50 border-emerald-500 text-emerald-700'))
                                                     : 'bg-bg-surface border-border hover:border-primary-container/30 text-text-secondary'">
@@ -622,7 +658,7 @@
                                         <p class="font-bold text-lg"
                                             :class="checklist_score >= 40 ? 'text-emerald-600' : 'text-amber-600'"
                                             x-text="checklist_score >= 40 ? 'Viable' : 'Riesgoso'"></p>
-                                        <p class="text-xs text-text-muted">Basado en <span
+                                        <p class="text-sm text-text-muted">Basado en <span
                                                 x-text="checklistItems.filter(i => i.score > 0).length"></span>
                                             respuestas</p>
                                     </div>
@@ -643,7 +679,7 @@
                                 <div class="relative z-10 space-y-8">
                                     <div class="flex items-center justify-between">
                                         <h4
-                                            class="font-ui-label text-white/40 uppercase text-[10px] tracking-[0.2em] font-bold">
+                                            class="font-ui-label text-white/40 uppercase text-sm tracking-[0.2em] font-bold">
                                             Resumen de Rentabilidad</h4>
                                         <span
                                             class="material-symbols-outlined text-white/20 text-sm">monetization_on</span>
@@ -698,7 +734,7 @@
                                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
                                         <div class="flex gap-3">
                                             <span class="material-symbols-outlined text-primary text-lg">info</span>
-                                            <p class="text-[10px] text-white/50 leading-relaxed">
+                                            <p class="text-sm text-white/50 leading-relaxed">
                                                 Cálculo basado en <span class="text-white/80 font-bold">15% Ads</span> y
                                                 factor operativo de <span class="text-white/80 font-bold">53%</span>.
                                                 Los valores son proyecciones estimadas.
@@ -717,7 +753,7 @@
                             <table class="min-w-full text-sm">
                                 <thead>
                                     <tr
-                                        class="border-b border-border text-text-muted uppercase text-[10px] tracking-widest font-bold">
+                                        class="border-b border-border text-text-muted uppercase text-sm tracking-widest font-bold">
                                         <th class="text-left py-4 px-2">Fecha</th>
                                         <th class="text-left py-4 px-2">Producto</th>
                                         <th class="text-left py-4 px-2">Checklist</th>
@@ -736,7 +772,7 @@
                                             <td class="py-4 px-2 font-semibold text-text-primary"
                                                 x-text="study.product_name"></td>
                                             <td class="py-4 px-2">
-                                                <span class="px-2 py-0.5 rounded text-xs font-bold"
+                                                <span class="px-2 py-0.5 rounded text-sm font-bold"
                                                     :class="study.checklist_score >= 40 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'"
                                                     x-text="study.checklist_score + ' pts'"></span>
                                             </td>
@@ -780,7 +816,7 @@
                                 Registrar Usuario
                             </button>
                             <div
-                                class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-widest">
+                                class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-bold uppercase tracking-widest">
                                 Organización: <?= htmlspecialchars($user['tenant_name']) ?>
                             </div>
                         </div>
@@ -790,7 +826,7 @@
                         <table class="min-w-full text-sm">
                             <thead>
                                 <tr
-                                    class="border-b border-border text-text-muted font-bold uppercase text-[10px] tracking-widest">
+                                    class="border-b border-border text-text-muted font-bold uppercase text-sm tracking-widest">
                                     <th class="text-left py-4 px-2">Nombre</th>
                                     <th class="text-left py-4 px-2">Email</th>
                                     <th class="text-left py-4 px-2">Rol</th>
@@ -804,22 +840,24 @@
                                     <?php foreach ($users as $u): ?>
                                         <tr class="border-b border-border-subtle hover:bg-bg-surface/50 transition-colors">
                                             <td class="py-4 px-2 font-semibold text-text-primary">
-                                                <?= htmlspecialchars($u['name']) ?></td>
+                                                <?= htmlspecialchars($u['name']) ?>
+                                            </td>
                                             <td class="py-4 px-2 text-text-secondary"><?= htmlspecialchars($u['email']) ?></td>
                                             <td class="py-4 px-2">
-                                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                                                <span class="px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider"
                                                     :class="'<?= $u['role'] ?>' === 'admin' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-600'">
                                                     <?= htmlspecialchars($u['role']) ?>
                                                 </span>
                                             </td>
                                             <td class="py-4 px-2">
-                                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                                                <span class="px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider"
                                                     :class="'<?= $u['status'] ?? 'active' ?>' === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'">
                                                     <?= htmlspecialchars($u['status'] ?? 'active') ?>
                                                 </span>
                                             </td>
-                                            <td class="py-4 px-2 text-text-muted text-xs">
-                                                <?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
+                                            <td class="py-4 px-2 text-text-muted text-sm">
+                                                <?= date('d/m/Y', strtotime($u['created_at'])) ?>
+                                            </td>
                                             <td class="py-4 px-2 text-right">
                                                 <div class="flex items-center justify-end gap-2">
                                                     <button
@@ -868,28 +906,28 @@
 
                 <form @submit.prevent="registerUser()" class="p-6 space-y-4">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">Nombre
+                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Nombre
                             Completo</label>
                         <input type="text" x-model="newUser.name"
                             class="w-full p-3 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10"
                             placeholder="Ej. Juan Perez" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">Correo
+                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Correo
                             Electrónico</label>
                         <input type="email" x-model="newUser.email"
                             class="w-full p-3 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10"
                             placeholder="ejemplo@correo.com" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">Contraseña
+                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Contraseña
                             Temporal</label>
                         <input type="password" x-model="newUser.password"
                             class="w-full p-3 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10"
                             placeholder="••••••••" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">Rol del
+                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Rol del
                             Usuario</label>
                         <select x-model="newUser.role"
                             class="w-full p-3 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10">
@@ -928,7 +966,7 @@
                         </div>
                         <div>
                             <p class="font-bold leading-none">Asistente Inteligente</p>
-                            <p class="text-[10px] text-white/70 mt-1 uppercase tracking-widest font-bold">En línea</p>
+                            <p class="text-sm text-white/70 mt-1 uppercase tracking-widest font-bold">En línea</p>
                         </div>
                     </div>
                     <button @click="isChatOpen = false" class="hover:bg-white/10 rounded-full p-1 transition-colors">
@@ -941,18 +979,21 @@
                     <template x-for="(msg, index) in chatMessages" :key="index">
                         <div :class="msg.role === 'assistant' ? 'flex justify-start' : 'flex justify-end'">
                             <div :class="msg.role === 'assistant' ? 'bg-white text-text-primary rounded-2xl rounded-tl-none border border-border-subtle shadow-sm' : 'bg-primary text-white rounded-2xl rounded-tr-none shadow-md shadow-primary/10'"
-                                class="max-w-[85%] p-4 text-sm leading-relaxed"
-                                x-html="renderMarkdown(msg.content)">
+                                class="max-w-[85%] p-4 text-sm leading-relaxed" x-html="renderMarkdown(msg.content)">
                             </div>
                         </div>
                     </template>
-                    
+
                     <!-- Typing Indicator -->
                     <div x-show="isTyping" class="flex justify-start">
-                        <div class="bg-white text-text-primary rounded-2xl rounded-tl-none border border-border-subtle shadow-sm p-4 flex gap-1 items-center">
-                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0s"></div>
-                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0.1s"></div>
-                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0.2s"></div>
+                        <div
+                            class="bg-white text-text-primary rounded-2xl rounded-tl-none border border-border-subtle shadow-sm p-4 flex gap-1 items-center">
+                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0s">
+                            </div>
+                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0.1s">
+                            </div>
+                            <div class="w-1.5 h-1.5 bg-text-muted rounded-full dot-jump" style="animation-delay: 0.2s">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -982,83 +1023,191 @@
         </div>
         <section x-show="currentView === 'configuracion'" x-transition>
             <?php if (($user['role'] ?? '') === 'admin'): ?>
-                <section class="bg-white border border-border rounded-xl p-6 md:p-8 shadow-sm" id="config-panel">
+                <!-- Config Selection Grid -->
+                <div x-show="!activeConfigTool" x-transition class="space-y-8">
                     <div class="mb-8">
-                        <h2 class="text-2xl font-h2-section text-text-primary">Configuración del Sistema</h2>
-                        <p class="text-sm text-text-secondary">Administra los proveedores de IA y llaves de acceso.</p>
+                        <h2 class="text-3xl font-h1-page text-text-primary tracking-tight">Configuración del Sistema</h2>
+                        <p class="text-text-secondary">Selecciona el módulo que deseas administrar.</p>
                     </div>
 
-                    <form @submit.prevent="saveSettings($event)" class="max-w-2xl space-y-8">
-                        <div class="space-y-6">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center">
-                                    <span class="material-symbols-outlined">bolt</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-text-primary">Groq Cloud</h3>
-                                    <p class="text-xs text-text-muted">Inferencia de alta velocidad.</p>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Card: IA -->
+                        <button @click="activeConfigTool = 'ia'"
+                            class="group bg-white p-8 rounded-3xl border border-border hover:border-primary hover:shadow-2xl hover:shadow-primary/5 transition-all text-left relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full opacity-50 group-hover:bg-orange-100 transition-colors">
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">Groq API
-                                    Key</label>
-                                <input type="password" name="groq_api_key"
-                                    value="<?= htmlspecialchars($settings['groq_api_key'] ?? '') ?>"
-                                    class="w-full p-4 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10 font-mono"
-                                    placeholder="gsk_...">
-                                <p class="text-[10px] text-text-muted">Consigue tu llave en <a
-                                        href="https://console.groq.com/" target="_blank"
-                                        class="text-primary hover:underline">Groq Console</a>.</p>
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
+                                <span class="material-symbols-outlined text-3xl">bolt</span>
                             </div>
-                        </div>
+                            <h3 class="text-xl font-bold text-text-primary mb-2 relative z-10">IA & Modelos</h3>
+                            <p class="text-sm text-text-muted leading-relaxed relative z-10">Configura Groq, API Keys y la
+                                personalidad del asistente inteligente.</p>
+                        </button>
 
-                        <div class="space-y-6">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                                    <span class="material-symbols-outlined">psychology</span>
+                        <!-- Card: Base de Datos -->
+                        <button @click="activeConfigTool = 'db'"
+                            class="group bg-white p-8 rounded-3xl border border-border hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all text-left relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full opacity-50 group-hover:bg-emerald-100 transition-colors">
+                            </div>
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
+                                <span class="material-symbols-outlined text-3xl">database</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-text-primary mb-2 relative z-10">Base de Datos</h3>
+                            <p class="text-sm text-text-muted leading-relaxed relative z-10">Conecta MySQL/MariaDB, migra
+                                datos y gestiona el almacenamiento.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- View: IA Configuration -->
+                <div x-show="activeConfigTool === 'ia'" x-transition class="space-y-6">
+                    <div class="flex items-center gap-4 mb-8">
+                        <button @click="activeConfigTool = null"
+                            class="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-bg-surface transition-all">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span>
+                        </button>
+                        <h2 class="text-2xl font-bold">Configuración de IA</h2>
+                    </div>
+
+                    <div class="bg-white border border-border rounded-3xl p-8 shadow-sm max-w-3xl">
+                        <form @submit.prevent="saveSettings($event)" class="space-y-8">
+                            <div class="space-y-6">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                                        <span class="material-symbols-outlined">bolt</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-text-primary">Proveedor: Groq Cloud</h3>
+                                        <p class="text-sm text-text-muted">Inferencia de alta velocidad para respuestas en
+                                            tiempo real.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-text-primary">Personalidad del Asistente</h3>
-                                    <p class="text-xs text-text-muted">Configura cómo debe responder la IA en cada sección.
-                                    </p>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold uppercase text-text-muted tracking-widest">API
+                                        Key</label>
+                                    <input type="password" name="groq_api_key"
+                                        value="<?= htmlspecialchars($settings['groq_api_key'] ?? '') ?>"
+                                        class="w-full p-4 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10 font-mono text-sm"
+                                        placeholder="gsk_...">
                                 </div>
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-bold uppercase text-text-muted tracking-widest">System Prompt
-                                    (Estudio Cualitativo)</label>
-                                <textarea name="qualitative_study_system_prompt" rows="5"
-                                    class="w-full p-4 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10 text-sm"
-                                    placeholder="Eres un experto en ecommerce..."><?= htmlspecialchars($settings['qualitative_study_system_prompt'] ?? 'Eres un experto en ecommerce y finanzas. Ayuda al estudiante a analizar la viabilidad de su producto basándote en los datos proporcionados.') ?></textarea>
-                                <p class="text-[10px] text-text-muted">Define las instrucciones maestras para la IA en esta
-                                    herramienta.</p>
-                            </div>
-                        </div>
 
-                        <hr class="border-border-subtle">
-
-                        <div class="opacity-50 pointer-events-none">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
-                                    <span class="material-symbols-outlined">auto_awesome</span>
+                            <div class="space-y-6">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                        <span class="material-symbols-outlined">psychology</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-text-primary">Instrucciones del Sistema</h3>
+                                        <p class="text-sm text-text-muted">Personaliza cómo interactúa el mentor con el
+                                            estudiante.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-text-primary">Google Gemini (Próximamente)</h3>
-                                    <p class="text-xs text-text-muted">Integración con 1.5 Pro y Flash.</p>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold uppercase text-text-muted tracking-widest">System Prompt
+                                        (Estudio Cualitativo)</label>
+                                    <textarea name="qualitative_study_system_prompt" rows="10"
+                                        class="w-full p-4 rounded-xl border-border bg-bg-surface focus:ring-4 focus:ring-primary/10 text-sm leading-relaxed"><?= htmlspecialchars($settings['qualitative_study_system_prompt'] ?? '') ?></textarea>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="pt-4">
                             <button type="submit"
-                                class="px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 transition-all">
-                                Guardar Configuración
+                                class="w-full md:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined">save</span>
+                                Guardar Cambios de IA
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- View: Database Configuration -->
+                <div x-show="activeConfigTool === 'db'" x-transition class="space-y-6">
+                    <div class="flex items-center gap-4 mb-8">
+                        <button @click="activeConfigTool = null"
+                            class="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-bg-surface transition-all">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span>
+                        </button>
+                        <h2 class="text-2xl font-bold">Gestión de Base de Datos</h2>
+                    </div>
+
+                    <div class="bg-white border border-border rounded-3xl p-8 shadow-sm max-w-4xl"
+                        x-data="{ db: <?= json_encode($db_config) ?> }">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold uppercase text-text-muted tracking-widest">Host</label>
+                                        <input type="text" x-model="db.host"
+                                            class="w-full p-3 rounded-xl border-border bg-bg-surface text-sm">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold uppercase text-text-muted tracking-widest">Puerto</label>
+                                        <input type="text" x-model="db.port"
+                                            class="w-full p-3 rounded-xl border-border bg-bg-surface text-sm">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Nombre de
+                                            la DB</label>
+                                        <input type="text" x-model="db.database"
+                                            class="w-full p-3 rounded-xl border-border bg-bg-surface text-sm">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold uppercase text-text-muted tracking-widest">Usuario</label>
+                                        <input type="text" x-model="db.username"
+                                            class="w-full p-3 rounded-xl border-border bg-bg-surface text-sm">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label
+                                            class="text-sm font-bold uppercase text-text-muted tracking-widest">Contraseña</label>
+                                        <input type="password" x-model="db.password"
+                                            class="w-full p-3 rounded-xl border-border bg-bg-surface text-sm">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-bold uppercase text-text-muted tracking-widest">Estado
+                                            Actual</label>
+                                        <div
+                                            class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-between">
+                                            <span class="text-sm font-bold text-emerald-700">MOTOR:
+                                                <?= strtoupper($db_config['driver']) ?></span>
+                                            <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-bg-surface rounded-2xl border border-border flex flex-wrap gap-4 items-center">
+                            <button type="button" @click="testDb(db)"
+                                class="px-6 py-3 bg-white border border-border rounded-xl text-sm font-bold hover:bg-white transition-all flex items-center gap-2 shadow-sm">
+                                <span class="material-symbols-outlined text-sm">network_check</span>
+                                Probar Conexión
+                            </button>
+                            <button type="button" @click="migrateDb(db)"
+                                class="px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-lg shadow-indigo-200">
+                                <span class="material-symbols-outlined text-sm">sync_alt</span>
+                                Migrar desde SQLite
+                            </button>
+                            <button type="button" @click="resetDb()"
+                                class="px-6 py-3 bg-red-50 text-red-600 border border-red-100 rounded-xl text-sm font-bold hover:bg-red-100 transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">delete_sweep</span>
+                                Reiniciar Tablas
                             </button>
                         </div>
-                    </form>
-                </section>
+                    </div>
+                </div>
             <?php endif; ?>
         </section>
     </main>

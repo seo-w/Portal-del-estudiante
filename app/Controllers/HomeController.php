@@ -74,6 +74,21 @@ final class HomeController
             exit;
         }
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'test_db_connection') {
+            $this->testDbConnection();
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'migrate_db') {
+            $this->migrateDb();
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'reset_db') {
+            $this->resetDb();
+            exit;
+        }
+
         $user = $this->currentUser();
         if ($user === null) {
             return [
@@ -95,6 +110,7 @@ final class HomeController
             'studies' => $this->repo->latestForUser($user),
             'users' => $this->repo->allUsersByTenant((int) $user['tenant_id']),
             'settings' => $this->repo->getSettings((int) $user['tenant_id']),
+            'db_config' => dbConfig(),
         ];
     }
 
@@ -336,6 +352,66 @@ final class HomeController
         } else {
             echo json_encode(['success' => false, 'message' => 'Error de Groq: ' . ($result['error']['message'] ?? 'Unknown error')]);
         }
+    }
+
+    private function testDbConnection(): void
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        try {
+            new Database($input);
+            echo json_encode(['success' => true, 'message' => 'Conexión exitosa.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
+        }
+    }
+
+    private function migrateDb(): void
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        try {
+            // 1. Exportar datos de SQLite (conexión actual)
+            $oldData = $this->repo->exportAllData();
+
+            // 2. Probar y conectar a la nueva DB
+            $newDb = new Database($input);
+            $newRepo = new StudyRepository($newDb->pdo());
+
+            // 3. Crear tablas en la nueva DB
+            $newRepo->resetTables();
+
+            // 4. Importar datos
+            $newRepo->importAllData($oldData);
+
+            // 5. Guardar nueva config en .env
+            $this->saveToEnv($input);
+
+            echo json_encode(['success' => true, 'message' => 'Migración completada con éxito. El sistema ahora usa la nueva base de datos.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error durante la migración: ' . $e->getMessage()]);
+        }
+    }
+
+    private function resetDb(): void
+    {
+        try {
+            $this->repo->resetTables();
+            echo json_encode(['success' => true, 'message' => 'Base de datos inicializada correctamente.']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error al resetear: ' . $e->getMessage()]);
+        }
+    }
+
+    private function saveToEnv(array $config): void
+    {
+        $envPath = __DIR__ . '/../../.env';
+        $content = "DB_DRIVER=" . ($config['driver'] ?? 'mysql') . "\n";
+        $content .= "DB_HOST=" . ($config['host'] ?? '127.0.0.1') . "\n";
+        $content .= "DB_PORT=" . ($config['port'] ?? '3306') . "\n";
+        $content .= "DB_NAME=" . ($config['database'] ?? '') . "\n";
+        $content .= "DB_USER=" . ($config['username'] ?? '') . "\n";
+        $content .= "DB_PASSWORD=" . ($config['password'] ?? '') . "\n";
+        
+        file_put_contents($envPath, $content);
     }
 
     private function currentUser(): ?array

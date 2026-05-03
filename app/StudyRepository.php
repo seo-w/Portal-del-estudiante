@@ -14,70 +14,116 @@ final class StudyRepository
 
     /**
      * Crea la tabla base si aún no existe.
-     * Nota: se mantiene un SQL compatible con SQLite para el MVP.
+     * Compatible con SQLite y MySQL.
      */
     public function migrate(): void
     {
+        $isMysql = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        $pk = $isMysql ? 'INT AUTO_INCREMENT PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT';
+        $textType = $isMysql ? 'LONGTEXT' : 'TEXT';
+
         $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS tenants (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "CREATE TABLE IF NOT EXISTS tenants (
+                id $pk,
                 name VARCHAR(120) NOT NULL,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )'
+            )"
         );
 
         $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "CREATE TABLE IF NOT EXISTS users (
+                id $pk,
                 tenant_id INTEGER NOT NULL,
                 name VARCHAR(120) NOT NULL,
                 email VARCHAR(180) NOT NULL UNIQUE,
                 password_hash VARCHAR(255) NOT NULL,
                 role VARCHAR(20) NOT NULL,
-                status VARCHAR(20) NOT NULL DEFAULT "active",
+                status VARCHAR(20) NOT NULL DEFAULT 'active',
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )'
+            )"
         );
 
         $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS qualitative_studies (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "CREATE TABLE IF NOT EXISTS qualitative_studies (
+                id $pk,
                 tenant_id INTEGER NOT NULL DEFAULT 1,
                 user_id INTEGER NOT NULL DEFAULT 1,
                 product_name VARCHAR(150) NOT NULL,
                 checklist_score INTEGER NOT NULL,
-                cmv NUMERIC NOT NULL,
-                total_unit_cost NUMERIC NOT NULL,
-                estimated_price NUMERIC NOT NULL,
-                net_profit NUMERIC NOT NULL,
-                net_margin NUMERIC NOT NULL,
+                cmv NUMERIC(15,2) NOT NULL,
+                total_unit_cost NUMERIC(15,2) NOT NULL,
+                estimated_price NUMERIC(15,2) NOT NULL,
+                net_profit NUMERIC(15,2) NOT NULL,
+                net_margin NUMERIC(15,4) NOT NULL,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )'
+            )"
         );
 
         $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS login_testimonials (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            "CREATE TABLE IF NOT EXISTS login_testimonials (
+                id $pk,
                 author_name VARCHAR(120) NOT NULL,
                 author_role VARCHAR(120) NOT NULL,
-                quote TEXT NOT NULL,
+                quote $textType NOT NULL,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )'
+            )"
         );
 
         $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS settings (
+            "CREATE TABLE IF NOT EXISTS settings (
                 tenant_id INTEGER NOT NULL,
                 key_name VARCHAR(100) NOT NULL,
-                key_value TEXT,
+                key_value $textType,
                 PRIMARY KEY (tenant_id, key_name)
-            )'
+            )"
         );
 
-        $this->ensureColumn('qualitative_studies', 'tenant_id', 'INTEGER NOT NULL DEFAULT 1');
-        $this->ensureColumn('qualitative_studies', 'user_id', 'INTEGER NOT NULL DEFAULT 1');
-        $this->ensureColumn('users', 'status', 'VARCHAR(20) NOT NULL DEFAULT "active"');
         $this->seedDefaults();
+    }
+
+    /**
+     * Resetea las tablas (DROP y CREATE).
+     */
+    public function resetTables(): void
+    {
+        $tables = ['settings', 'login_testimonials', 'qualitative_studies', 'users', 'tenants'];
+        foreach ($tables as $table) {
+            $this->pdo->exec("DROP TABLE IF EXISTS $table");
+        }
+        $this->migrate();
+    }
+
+    /**
+     * Obtiene todos los datos de todas las tablas para exportación.
+     */
+    public function exportAllData(): array
+    {
+        $tables = ['tenants', 'users', 'qualitative_studies', 'login_testimonials', 'settings'];
+        $data = [];
+        foreach ($tables as $table) {
+            $data[$table] = $this->pdo->query("SELECT * FROM $table")->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $data;
+    }
+
+    /**
+     * Importa datos masivamente (usado en migración).
+     */
+    public function importAllData(array $data): void
+    {
+        foreach ($data as $table => $rows) {
+            if (empty($rows)) continue;
+            
+            $columns = array_keys($rows[0]);
+            $placeholders = array_map(fn($c) => ":$c", $columns);
+            
+            $sql = "INSERT INTO $table (" . implode(',', $columns) . ") VALUES (" . implode(',', $placeholders) . ")";
+            $stmt = $this->pdo->prepare($sql);
+            
+            foreach ($rows as $row) {
+                $stmt->execute($row);
+            }
+        }
     }
 
     /**
