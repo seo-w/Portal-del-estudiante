@@ -39,6 +39,16 @@ final class HomeController
             return $this->login();
         }
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'save_ajax') {
+            $this->saveAjax();
+            exit;
+        }
+
+        if ($action === 'get_studies') {
+            $this->getStudiesJson();
+            exit;
+        }
+
         $user = $this->currentUser();
         if ($user === null) {
             return [
@@ -111,6 +121,29 @@ final class HomeController
 
         header('Location: /');
         exit;
+    }
+
+    private function saveAjax(): void
+    {
+        header('Content-Type: application/json');
+        try {
+            $this->storeStudy();
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    private function getStudiesJson(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null) {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+        $studies = $this->repo->latestForUser($user);
+        echo json_encode(['success' => true, 'data' => $studies]);
     }
 
     private function logout(): void
