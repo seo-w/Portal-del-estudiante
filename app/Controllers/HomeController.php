@@ -49,6 +49,31 @@ final class HomeController
             exit;
         }
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_user') {
+            $this->registerUser();
+            exit;
+        }
+
+        if ($action === 'update_user_status') {
+            $this->updateUserStatus();
+            exit;
+        }
+
+        if ($action === 'delete_user') {
+            $this->deleteUser();
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'save_settings') {
+            $this->saveSettings();
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'chat_proxy') {
+            $this->chatProxy();
+            exit;
+        }
+
         $user = $this->currentUser();
         if ($user === null) {
             return [
@@ -68,6 +93,8 @@ final class HomeController
             'view' => 'home',
             'user' => $user,
             'studies' => $this->repo->latestForUser($user),
+            'users' => $this->repo->allUsersByTenant((int) $user['tenant_id']),
+            'settings' => $this->repo->getSettings((int) $user['tenant_id']),
         ];
     }
 
@@ -154,6 +181,161 @@ final class HomeController
             setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
         }
         session_destroy();
+    }
+
+    private function registerUser(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null || ($user['role'] ?? '') !== 'admin') {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $email = trim($_POST['email'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $role = $_POST['role'] ?? 'estudiante';
+
+        if ($email === '' || $name === '' || $password === '') {
+            echo json_encode(['success' => false, 'message' => 'Faltan datos']);
+            return;
+        }
+
+        try {
+            $this->repo->createUser([
+                'tenant_id' => (int) $user['tenant_id'],
+                'name' => $name,
+                'email' => $email,
+                'password' => $password,
+                'role' => $role,
+                'status' => 'active'
+            ]);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error al registrar: ' . $e->getMessage()]);
+        }
+    }
+
+    private function updateUserStatus(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null || ($user['role'] ?? '') !== 'admin') {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $targetId = (int) ($_GET['id'] ?? 0);
+        $status = $_GET['status'] ?? 'active';
+
+        try {
+            $this->repo->updateUserStatus($targetId, (int) $user['tenant_id'], $status);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    private function deleteUser(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null || ($user['role'] ?? '') !== 'admin') {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $targetId = (int) ($_GET['id'] ?? 0);
+        if ($targetId === (int) $user['id']) {
+            echo json_encode(['success' => false, 'message' => 'No puedes borrarte a ti mismo']);
+            return;
+        }
+
+        try {
+            $this->repo->deleteUser($targetId, (int) $user['tenant_id']);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    private function saveSettings(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null || ($user['role'] ?? '') !== 'admin') {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        foreach ($_POST as $key => $value) {
+            $this->repo->saveSetting((int) $user['tenant_id'], $key, $value);
+        }
+
+        echo json_encode(['success' => true]);
+    }
+
+    private function chatProxy(): void
+    {
+        header('Content-Type: application/json');
+        $user = $this->currentUser();
+        if ($user === null) {
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+
+        $settings = $this->repo->getSettings((int) $user['tenant_id']);
+        $groqKey = $settings['groq_api_key'] ?? '';
+
+        if ($groqKey === '') {
+            echo json_encode(['success' => false, 'message' => 'Configuración de IA no encontrada']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $messages = $input['messages'] ?? [];
+        $context = $input['context'] ?? '';
+        $view = $input['view'] ?? 'qualitative_study';
+
+        // Get view-specific system prompt or fallback
+        $systemPromptKey = $view . '_system_prompt';
+        $systemMsg = $settings[$systemPromptKey] ?? 'Eres un experto en ecommerce y finanzas. Ayuda al estudiante.';
+        
+        $systemMsg .= "\n\nDatos actuales del producto:\n" . $context;
+        
+        array_unshift($messages, ['role' => 'system', 'content' => $systemMsg]);
+
+        $url = 'https://api.groq.com/openai/v1/chat/completions';
+        $data = [
+            'model' => 'llama-3.3-70b-versatile',
+            'messages' => $messages,
+            'temperature' => 0.7,
+            'max_tokens' => 1024
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $groqKey,
+            'Content-Type: application/json'
+        ]);
+
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo json_encode(['success' => false, 'message' => curl_error($ch)]);
+            return;
+        }
+        curl_close($ch);
+
+        $result = json_decode($response, true);
+        if (isset($result['choices'][0]['message']['content'])) {
+            echo json_encode(['success' => true, 'content' => $result['choices'][0]['message']['content']]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error de Groq: ' . ($result['error']['message'] ?? 'Unknown error')]);
+        }
     }
 
     private function currentUser(): ?array

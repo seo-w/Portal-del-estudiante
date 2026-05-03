@@ -9,6 +9,19 @@ function calculator() {
         activeTool: null,
         currentStep: 1,
         isMobileMenuOpen: false,
+        isUserModalOpen: false,
+        isChatOpen: false,
+        isTyping: false,
+        chatMessages: [
+            { role: 'assistant', content: '¡Hola! Soy tu asistente IA. ¿En qué puedo ayudarte con tu estudio cualitativo o financiero hoy?' }
+        ],
+        userMessage: '',
+        newUser: {
+            name: '',
+            email: '',
+            password: '',
+            role: 'estudiante'
+        },
         product_name: '',
         checklist_score: 0,
         costo_mercancia_vendida: 0,
@@ -31,6 +44,20 @@ function calculator() {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }).format(Number(value || 0) * 100) + '%';
+        },
+        renderMarkdown(text) {
+            if (!text) return '';
+            // Basic Markdown to HTML
+            let html = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italics
+                .replace(/^\* (.*?)$/gm, '<li>$1</li>') // List items
+                .replace(/\n/g, '<br>'); // Line breaks
+            
+            if (html.includes('<li>')) {
+                html = html.replace(/(<li>.*?<\/li>)/gs, '<ul class="list-disc pl-4 my-2">$1</ul>');
+            }
+            return html;
         },
         checklistItems: [
             { id: 1, category: 'Producto', question: 'El producto resuelve un beneficio emocional masivo', options: ['Poco', 'Normal', 'Mucho'], score: 0 },
@@ -123,6 +150,129 @@ function calculator() {
                 }
             } catch (error) {
                 console.error('Error fetching studies:', error);
+            }
+        },
+
+        async registerUser() {
+            try {
+                const formData = new FormData();
+                formData.append('name', this.newUser.name);
+                formData.append('email', this.newUser.email);
+                formData.append('password', this.newUser.password);
+                formData.append('role', this.newUser.role);
+
+                const response = await fetch('/?action=register_user', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Usuario registrado con éxito');
+                    this.isUserModalOpen = false;
+                    this.newUser = { name: '', email: '', password: '', role: 'estudiante' };
+                    window.location.reload(); 
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error registering user:', error);
+            }
+        },
+
+        async toggleUserStatus(userId, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+            try {
+                const response = await fetch(`/?action=update_user_status&id=${userId}&status=${newStatus}`);
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error toggling status:', error);
+            }
+        },
+
+        async deleteUser(userId) {
+            if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) return;
+            try {
+                const response = await fetch(`/?action=delete_user&id=${userId}`);
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
+        },
+
+        async sendMessage() {
+            if (this.userMessage.trim() === '') return;
+            
+            const msg = this.userMessage;
+            this.chatMessages.push({ role: 'user', content: msg });
+            this.userMessage = '';
+            this.isTyping = true;
+
+            this.$nextTick(() => {
+                const chatBox = document.getElementById('chat-container');
+                if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+            });
+
+            try {
+                // Get context from current state
+                const context = `Datos actuales: Producto: ${this.product_name}, Checklist: ${this.checklist_score}/54. CMV: ${this.costo_mercancia_vendida}. Precio Sugerido: ${this.estimated_price}. Margen: ${this.net_margin}.`;
+                
+                const response = await fetch('/?action=chat_proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: this.chatMessages.slice(-6), // last 6 messages
+                        context: context,
+                        view: 'qualitative_study'
+                    })
+                });
+                
+                const result = await response.json();
+                this.isTyping = false;
+
+                if (result.success) {
+                    this.chatMessages.push({ role: 'assistant', content: result.content });
+                } else {
+                    this.chatMessages.push({ role: 'assistant', content: 'Error: ' + result.message });
+                }
+
+                this.$nextTick(() => {
+                    const chatBox = document.getElementById('chat-container');
+                    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+                });
+            } catch (error) {
+                this.isTyping = false;
+                console.error('Chat error:', error);
+                this.chatMessages.push({ role: 'assistant', content: 'Error de conexión con el servidor.' });
+            }
+        },
+
+        async saveSettings(event) {
+            try {
+                const formData = new FormData(event.target);
+                const response = await fetch('/?action=save_settings', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Configuración guardada correctamente');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving settings:', error);
             }
         },
         init() {

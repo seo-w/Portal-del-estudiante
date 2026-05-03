@@ -15,6 +15,5 @@ if ($view === 'login') {
     exit;
 }
 
-$user = $data['user'];
-$studies = $data['studies'];
+extract($data);
 require_once __DIR__ . '/../app/Views/home.php';

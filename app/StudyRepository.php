@@ -34,6 +34,7 @@ final class StudyRepository
                 email VARCHAR(180) NOT NULL UNIQUE,
                 password_hash VARCHAR(255) NOT NULL,
                 role VARCHAR(20) NOT NULL,
+                status VARCHAR(20) NOT NULL DEFAULT "active",
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )'
         );
@@ -64,8 +65,18 @@ final class StudyRepository
             )'
         );
 
+        $this->pdo->exec(
+            'CREATE TABLE IF NOT EXISTS settings (
+                tenant_id INTEGER NOT NULL,
+                key_name VARCHAR(100) NOT NULL,
+                key_value TEXT,
+                PRIMARY KEY (tenant_id, key_name)
+            )'
+        );
+
         $this->ensureColumn('qualitative_studies', 'tenant_id', 'INTEGER NOT NULL DEFAULT 1');
         $this->ensureColumn('qualitative_studies', 'user_id', 'INTEGER NOT NULL DEFAULT 1');
+        $this->ensureColumn('users', 'status', 'VARCHAR(20) NOT NULL DEFAULT "active"');
         $this->seedDefaults();
     }
 
@@ -144,6 +155,83 @@ final class StudyRepository
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
         return $user === false ? null : $user;
+    }
+
+    public function allUsersByTenant(int $tenantId): array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT id, name, email, role, status, created_at
+             FROM users
+             WHERE tenant_id = :tenant_id
+             ORDER BY name ASC'
+        );
+        $stmt->execute([':tenant_id' => $tenantId]);
+        return $stmt->fetchAll();
+    }
+
+    public function createUser(array $data): void
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO users (tenant_id, name, email, password_hash, role, status)
+             VALUES (:tenant_id, :name, :email, :password_hash, :role, :status)'
+        );
+        $stmt->execute([
+            ':tenant_id' => $data['tenant_id'],
+            ':name' => $data['name'],
+            ':email' => $data['email'],
+            ':password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
+            ':role' => $data['role'] ?? 'estudiante',
+            ':status' => $data['status'] ?? 'active'
+        ]);
+    }
+
+    public function updateUserStatus(int $userId, int $tenantId, string $status): void
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE users SET status = :status WHERE id = :id AND tenant_id = :tenant_id'
+        );
+        $stmt->execute([
+            ':status' => $status,
+            ':id' => $userId,
+            ':tenant_id' => $tenantId
+        ]);
+    }
+
+    public function deleteUser(int $userId, int $tenantId): void
+    {
+        $stmt = $this->pdo->prepare(
+            'DELETE FROM users WHERE id = :id AND tenant_id = :tenant_id'
+        );
+        $stmt->execute([
+            ':id' => $userId,
+            ':tenant_id' => $tenantId
+        ]);
+    }
+
+    public function getSettings(int $tenantId): array
+    {
+        $stmt = $this->pdo->prepare('SELECT key_name, key_value FROM settings WHERE tenant_id = :tenant_id');
+        $stmt->execute([':tenant_id' => $tenantId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $settings = [];
+        foreach ($rows as $row) {
+            $settings[$row['key_name']] = $row['key_value'];
+        }
+        return $settings;
+    }
+
+    public function saveSetting(int $tenantId, string $key, ?string $value): void
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO settings (tenant_id, key_name, key_value) 
+             VALUES (:tenant_id, :key, :value)
+             ON CONFLICT(tenant_id, key_name) DO UPDATE SET key_value = :value'
+        );
+        $stmt->execute([
+            ':tenant_id' => $tenantId,
+            ':key' => $key,
+            ':value' => $value
+        ]);
     }
 
     public function randomLoginTestimonial(): ?array
